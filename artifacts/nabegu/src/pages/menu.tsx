@@ -38,18 +38,20 @@ function FlipCard({ item, onAdd }: { item: MenuItemType; onAdd: (item: MenuItemT
                 {item.category}
               </span>
             </div>
-            <div className="px-5 pt-5 pb-2 flex flex-col">
-              <h3 className="text-xl font-bold mb-1">{item.name}</h3>
-              <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
+            <div className="px-5 pt-5 pb-3 flex flex-col gap-2 flex-1 min-h-0">
+              <h3 className="text-xl font-bold leading-tight line-clamp-2 min-h-[52px]">{item.name}</h3>
+              <p className="text-sm text-muted-foreground leading-snug line-clamp-2 min-h-[40px]">
+                {item.description}
+              </p>
               {item.weight && (
                 <p className="text-xs text-muted-foreground">{item.weight} г · {item.calories} ккал</p>
               )}
             </div>
           </div>
 
-          <div className="px-5 pb-5 pt-3 border-t mt-auto flex items-center justify-between">
-            <span className="text-2xl font-bold text-primary">{item.price} ₽</span>
-            <div className="flex items-center gap-2">
+          <div className="px-5 pb-5 pt-3 border-t mt-auto flex-shrink-0 flex items-center justify-between gap-2">
+            <span className="text-2xl font-bold leading-none text-primary whitespace-nowrap">{item.price} ₽</span>
+            <div className="flex items-center gap-2 flex-shrink-0">
               <Button
                 size="sm"
                 variant="outline"
