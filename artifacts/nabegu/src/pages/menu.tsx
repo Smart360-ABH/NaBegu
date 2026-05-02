@@ -38,8 +38,8 @@ function FlipCard({ item, onAdd }: { item: MenuItemType; onAdd: (item: MenuItemT
                 {item.category}
               </span>
             </div>
-            <div className="px-5 pt-5 pb-3 flex flex-col flex-1 min-h-0 justify-center">
-              <h3 className="text-[28px] leading-tight font-bold line-clamp-2 min-h-[72px]">
+            <div className="px-5 pt-4 pb-2 flex flex-col flex-1 min-h-0 justify-center">
+              <h3 className="text-2xl md:text-xl leading-tight font-bold line-clamp-2 min-h-[56px]">
                 {item.name}
               </h3>
             </div>
