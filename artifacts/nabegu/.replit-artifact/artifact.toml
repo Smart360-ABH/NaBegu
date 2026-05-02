@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "НаБегу — Быстрое питание"
+version = "1.0.0"
+id = "artifacts/nabegu"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25184
+
+[services.development]
+run = "pnpm --filter @workspace/nabegu run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/nabegu", "run", "build" ]
+publicDir = "artifacts/nabegu/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25184"
+BASE_PATH = "/"
