@@ -89,6 +89,11 @@ const NEWS_ITEMS = [
 export default function Home() {
   const { addItem } = useCart();
   const featuredProducts = POPULAR_PRODUCTS.slice(0, 4);
+  const installUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/?utm_source=qr_install`
+      : "https://nabegu.onrender.com/";
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(installUrl)}`;
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-gray-50/50 dark:bg-background">
@@ -213,11 +218,16 @@ export default function Home() {
             </div>
             
             <div className="hidden md:flex gap-4">
-              {/* Dummy QR code squares */}
               <div className="bg-white p-3 rounded-2xl shadow-sm">
-                <div className="w-32 h-32 bg-gray-200 rounded-xl flex items-center justify-center">
-                  <span className="text-gray-400 font-bold">QR код</span>
-                </div>
+                <img
+                  src={qrCodeUrl}
+                  alt="QR-код для открытия сайта и установки приложения"
+                  className="w-32 h-32 rounded-xl"
+                  loading="lazy"
+                />
+                <p className="text-[11px] text-center text-gray-500 mt-2 font-medium">
+                  Сканируй для установки
+                </p>
               </div>
             </div>
           </div>
