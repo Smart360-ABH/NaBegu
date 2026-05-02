@@ -1,0 +1,19 @@
+{
+  "name": "НаБегу — Быстрое питание",
+  "short_name": "НаБегу",
+  "description": "Быстрый заказ еды онлайн с удобным интерфейсом.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fdf9f1",
+  "theme_color": "#ff6a00",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
