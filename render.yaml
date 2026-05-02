@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: nabegu-frontend
+    runtime: static
+    rootDir: artifacts/nabegu
+    buildCommand: corepack enable && corepack prepare pnpm@10.28.0 --activate && pnpm install --frozen-lockfile && pnpm build
+    staticPublishPath: ./dist/public
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: VITE_BACK4APP_APP_ID
+        sync: false
+      - key: VITE_BACK4APP_JS_KEY
+        sync: false
+      - key: VITE_YANDEX_MAPS_KEY
+        sync: false
