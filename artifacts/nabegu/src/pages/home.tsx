@@ -265,7 +265,7 @@ export default function Home() {
               <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                 <Button 
                   size="lg" 
-                  className="rounded-full bg-white text-secondary-foreground hover:bg-gray-100 font-bold px-8"
+                  className="rounded-full bg-white text-secondary hover:bg-gray-100 font-bold px-8 border border-white/60"
                   onClick={handleInstallClick}
                 >
                   <Smartphone className="mr-2 w-5 h-5" />
@@ -297,7 +297,7 @@ export default function Home() {
                 </div>
                 <Button
                   size="sm"
-                  className="mt-4 rounded-full font-semibold"
+                  className="mt-4 rounded-full font-semibold text-primary-foreground"
                   onClick={handleInstallClick}
                 >
                   Скачать приложение
