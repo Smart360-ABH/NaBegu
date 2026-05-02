@@ -38,14 +38,10 @@ function FlipCard({ item, onAdd }: { item: MenuItemType; onAdd: (item: MenuItemT
                 {item.category}
               </span>
             </div>
-            <div className="px-5 pt-5 pb-3 flex flex-col gap-2 flex-1 min-h-0">
-              <h3 className="text-xl font-bold leading-tight line-clamp-2 min-h-[52px]">{item.name}</h3>
-              <p className="text-sm text-muted-foreground leading-snug line-clamp-2 min-h-[40px]">
-                {item.description}
-              </p>
-              {item.weight && (
-                <p className="text-xs text-muted-foreground">{item.weight} г · {item.calories} ккал</p>
-              )}
+            <div className="px-5 pt-5 pb-3 flex flex-col flex-1 min-h-0 justify-center">
+              <h3 className="text-[28px] leading-tight font-bold line-clamp-2 min-h-[72px]">
+                {item.name}
+              </h3>
             </div>
           </div>
 
