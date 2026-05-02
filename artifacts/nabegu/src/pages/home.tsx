@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Smartphone } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -86,14 +87,70 @@ const NEWS_ITEMS = [
   },
 ];
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+}
+
 export default function Home() {
   const { addItem } = useCart();
   const featuredProducts = POPULAR_PRODUCTS.slice(0, 4);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isIos, setIsIos] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
   const installUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}/?utm_source=qr_install`
       : "https://nabegu.onrender.com/";
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(installUrl)}`;
+
+  useEffect(() => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+    const standaloneMode =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      // @ts-expect-error Safari on iOS exposes standalone on navigator
+      window.navigator.standalone === true;
+
+    setIsIos(isIosDevice);
+    setIsStandalone(standaloneMode);
+
+    const onBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setDeferredPrompt(event as BeforeInstallPromptEvent);
+    };
+
+    window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (isStandalone) {
+      toast.success("Приложение уже установлено");
+      return;
+    }
+
+    if (deferredPrompt) {
+      await deferredPrompt.prompt();
+      const result = await deferredPrompt.userChoice;
+      if (result.outcome === "accepted") {
+        toast.success("Установка приложения запущена");
+      } else {
+        toast.info("Установка отменена");
+      }
+      setDeferredPrompt(null);
+      return;
+    }
+
+    if (isIos) {
+      toast.info("На iPhone: Поделиться -> На экран Домой");
+      return;
+    }
+
+    toast.info("Откройте сайт в Chrome и нажмите 'Установить приложение'");
+  };
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-gray-50/50 dark:bg-background">
@@ -209,7 +266,7 @@ export default function Home() {
                 <Button 
                   size="lg" 
                   className="rounded-full bg-white text-secondary-foreground hover:bg-gray-100 font-bold px-8"
-                  onClick={() => toast.info("Приложение находится в разработке!")}
+                  onClick={handleInstallClick}
                 >
                   <Smartphone className="mr-2 w-5 h-5" />
                   Скачать приложение
@@ -228,6 +285,23 @@ export default function Home() {
                 <p className="text-[11px] text-center text-gray-500 mt-2 font-medium">
                   Сканируй для установки
                 </p>
+              </div>
+              <div className="bg-white p-4 rounded-2xl shadow-sm w-44 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-gray-900 mb-1">
+                    Установить на смартфон
+                  </p>
+                  <p className="text-[11px] text-gray-500 leading-snug">
+                    Нажмите кнопку ниже, чтобы открыть системное окно установки.
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  className="mt-4 rounded-full font-semibold"
+                  onClick={handleInstallClick}
+                >
+                  Скачать приложение
+                </Button>
               </div>
             </div>
           </div>
