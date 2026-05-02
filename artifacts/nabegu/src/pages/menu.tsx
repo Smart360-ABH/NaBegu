@@ -7,8 +7,32 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
+function getFallbackImageByCategory(category: string): string {
+  const normalized = category.toLowerCase();
+  if (normalized.includes("бургер")) return "/assets/images/burger.png";
+  if (normalized.includes("напит")) return "/assets/images/drinks.png";
+  if (normalized.includes("десерт")) return "/assets/images/desserts.png";
+  return "/assets/images/hot-dishes.png";
+}
+
+function resolveMenuImage(item: MenuItemType): string {
+  if (!item.imageUrl) return getFallbackImageByCategory(item.category);
+  const src = item.imageUrl.toLowerCase();
+  const fallback = getFallbackImageByCategory(item.category);
+
+  // If the backend returned a generic local asset that conflicts with category, keep UI consistent.
+  if (src.includes("/assets/images/")) {
+    if (item.category.toLowerCase().includes("бургер") && !src.includes("burger")) return fallback;
+    if (item.category.toLowerCase().includes("напит") && !src.includes("drinks")) return fallback;
+    if (item.category.toLowerCase().includes("десерт") && !src.includes("desserts")) return fallback;
+  }
+
+  return item.imageUrl;
+}
+
 function FlipCard({ item, onAdd }: { item: MenuItemType; onAdd: (item: MenuItemType) => void }) {
   const [flipped, setFlipped] = useState(false);
+  const imageSrc = resolveMenuImage(item);
 
   return (
     <div
@@ -29,7 +53,7 @@ function FlipCard({ item, onAdd }: { item: MenuItemType; onAdd: (item: MenuItemT
           <div className="cursor-pointer flex flex-col flex-1 min-h-0" onClick={() => setFlipped(true)}>
             <div className="relative aspect-[4/3] overflow-hidden bg-muted flex-shrink-0">
               <img
-                src={item.imageUrl}
+                src={imageSrc}
                 alt={item.name}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
@@ -38,14 +62,14 @@ function FlipCard({ item, onAdd }: { item: MenuItemType; onAdd: (item: MenuItemT
                 {item.category}
               </span>
             </div>
-            <div className="px-5 pt-6 pb-2 h-[92px] flex items-start">
-              <h3 className="text-2xl md:text-xl leading-snug font-bold line-clamp-2">
+            <div className="p-3 min-h-[84px] flex items-start">
+              <h3 className="text-xl md:text-xl leading-tight font-bold line-clamp-2 break-words">
                 {item.name}
               </h3>
             </div>
           </div>
 
-          <div className="px-5 pb-5 pt-3 border-t mt-auto flex-shrink-0 flex items-center justify-between gap-2">
+          <div className="p-3 border-t mt-auto flex-shrink-0 flex items-center justify-between gap-2">
             <span className="text-2xl font-bold leading-none text-primary whitespace-nowrap">{item.price} ₽</span>
             <div className="flex items-center gap-2 flex-shrink-0">
               <Button
